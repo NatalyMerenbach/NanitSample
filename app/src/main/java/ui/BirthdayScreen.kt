@@ -63,21 +63,6 @@ fun BirthdayScreen(
             contentScale = ContentScale.Crop
         )
 
-        // Status bar with theme title
-//        Box(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .statusBarsPadding()
-//                .padding(16.dp),
-//            contentAlignment = Alignment.Center
-//        ) {
-//            Text(
-//                text = getStatusBarTitle(theme),
-//                fontSize = 14.sp,
-//                fontWeight = FontWeight.Medium,
-//                color = Color.Gray
-//            )
-//        }
 
         // Main content overlay
         Column(
@@ -120,7 +105,7 @@ fun BirthdayScreen(
                     contentDescription = "Age ${ageResult.value}",
                     modifier = Modifier
                         .size(120.dp, 180.dp),
-                    colorFilter = ColorFilter.tint(getThemeAccentColor(theme))
+//                    colorFilter = ColorFilter.tint(getThemeAccentColor(theme))
                 )
 
                 // Right decorative element
