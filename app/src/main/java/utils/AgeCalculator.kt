@@ -21,13 +21,13 @@ object AgeCalculator {
         return if (totalMonths < 12) {
             AgeResult(
                 value = totalMonths.toInt(),
-                unit = "month${if (totalMonths == 1L) "" else "s"}",
+                unit = "month${if (totalMonths == 1L) "" else "s"} old",
                 isInMonths = true
             )
         } else {
             AgeResult(
                 value = totalYears.toInt(),
-                unit = "year${if (totalYears == 1L) "" else "s"}",
+                unit = "year${if (totalYears == 1L) "" else "s"} old",
                 isInMonths = false
             )
         }
