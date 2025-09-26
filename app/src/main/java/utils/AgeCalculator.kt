@@ -33,29 +33,6 @@ object AgeCalculator {
         }
     }
 
-    fun formatBirthDate(dobMillis: Long): String {
-        val dob = Instant.ofEpochMilli(dobMillis)
-            .atZone(ZoneId.systemDefault())
-            .toLocalDate()
-
-        val formatter = DateTimeFormatter.ofPattern("MMM d, yyyy")
-        return dob.format(formatter)
-    }
-
-    fun getNextBirthday(dobMillis: Long): LocalDate {
-        val dob = Instant.ofEpochMilli(dobMillis)
-            .atZone(ZoneId.systemDefault())
-            .toLocalDate()
-
-        val today = LocalDate.now()
-        val thisYearBirthday = dob.withYear(today.year)
-
-        return if (thisYearBirthday.isAfter(today) || thisYearBirthday.isEqual(today)) {
-            thisYearBirthday
-        } else {
-            thisYearBirthday.plusYears(1)
-        }
-    }
 }
 
 data class AgeResult(
