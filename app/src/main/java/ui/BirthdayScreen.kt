@@ -7,15 +7,12 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope.weight
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
@@ -43,7 +40,6 @@ import utils.AgeCalculator
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
-import kotlin.text.uppercase
 
 @Composable
 fun BirthdayScreen(
@@ -68,20 +64,20 @@ fun BirthdayScreen(
         )
 
         // Status bar with theme title
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .statusBarsPadding()
-                .padding(16.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = getStatusBarTitle(theme),
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium,
-                color = Color.Gray
-            )
-        }
+//        Box(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .statusBarsPadding()
+//                .padding(16.dp),
+//            contentAlignment = Alignment.Center
+//        ) {
+//            Text(
+//                text = getStatusBarTitle(theme),
+//                fontSize = 14.sp,
+//                fontWeight = FontWeight.Medium,
+//                color = Color.Gray
+//            )
+//        }
 
         // Main content overlay
         Column(
@@ -92,14 +88,15 @@ fun BirthdayScreen(
         ) {
             Spacer(modifier = Modifier.height(60.dp))
 
-            // Header text: "TODAY [NAME] IS"
+            // Header text: "TODAY [NAME] IS" with automatic line wrapping
             Text(
-                text = "TODAY ${birthdayData.name.uppercase()}\nRONALDO IS",
+                text = "TODAY ${birthdayData.name.uppercase()} IS",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = getThemeTextColor(theme),
                 textAlign = TextAlign.Center,
-                lineHeight = 20.sp
+                lineHeight = 20.sp,
+                maxLines = 2
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -313,6 +310,7 @@ private fun getThemeCircleBorderColor(theme: Theme): Color {
 }
 
 private fun getStatusBarTitle(theme: Theme): String {
+
     return when (theme) {
         Theme.FOX -> "Membook - Anniversary - Fox"
         Theme.ELEPHANT -> "Membook - Anniversary - Elephant"
@@ -321,7 +319,7 @@ private fun getStatusBarTitle(theme: Theme): String {
 }
 
 private fun getThemeBackgroundColor(theme: Theme): Color {
-    BirthdayThemes.getTheme(Theme.FOX).backgroundColor
+    return BirthdayThemes.getTheme(theme).backgroundColor
 //    return when (theme) {
 //        Theme.FOX -> BirthdayThemes.getTheme(Theme.FOX).backgroundColor // Light green to fill transparent areas
 //        Theme.ELEPHANT -> Color(0xFFFFF8DC) // Light cream to fill transparent areas
@@ -337,12 +335,14 @@ private fun getThemeFallbackBackground(theme: Theme): Brush {
                 Color(0xFF88D8A3)  // Medium green
             )
         )
+
         Theme.ELEPHANT -> Brush.verticalGradient(
             colors = listOf(
                 Color(0xFFFFF8DC), // Light cream
                 Color(0xFFFFE5B4)  // Light peach
             )
         )
+
         Theme.PELICAN -> Brush.verticalGradient(
             colors = listOf(
                 Color(0xFFE3F2FD), // Light blue
