@@ -71,12 +71,12 @@ fun BirthdayScreen(
                 .padding(horizontal = 22.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(60.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             // Header text: "TODAY [NAME] IS" with automatic line wrapping
             Text(
                 text = "TODAY ${birthdayData.name.uppercase()} IS",
-                fontSize = 16.sp,
+                fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = getThemeTextColor(theme),
                 textAlign = TextAlign.Center,
@@ -84,7 +84,7 @@ fun BirthdayScreen(
                 maxLines = 2
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(15.dp))
 
             // Age number with decorative flourishes
             Box(
@@ -118,7 +118,7 @@ fun BirthdayScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(13.dp))
 
             // "MONTH OLD!" or "YEAR OLD!" text
             Text(
@@ -129,7 +129,7 @@ fun BirthdayScreen(
                 textAlign = TextAlign.Center
             )
 
-            Spacer(modifier = Modifier.height(48.dp))
+            Spacer(modifier = Modifier.height(15.dp))
 
             // Photo circle with themed camera icon
             PhotoCircleWithCamera(
@@ -138,7 +138,7 @@ fun BirthdayScreen(
                 theme = theme
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(15.dp))
 
             // "nanit" logo
             Image(
@@ -252,6 +252,14 @@ private fun getThemeBabyFace(theme: Theme): Int {
     }
 }
 
+private fun getThemeBabyFaceSmall(theme: Theme): Int {
+    return when (theme) {
+        Theme.FOX -> R.drawable.ic_fox_baby_3
+        Theme.ELEPHANT -> R.drawable.ic_elephant_baby_3
+        Theme.PELICAN -> R.drawable.ic_pelikan_baby_3
+    }
+}
+
 private fun getThemeBackgroundDrawable(theme: Theme): Int {
     return when (theme) {
         Theme.FOX -> R.drawable.bg_fox
@@ -279,11 +287,7 @@ private fun getThemeAccentColor(theme: Theme): Color {
 }
 
 private fun getThemeCircleColor(theme: Theme): Color {
-    return when (theme) {
-        Theme.FOX -> Color(0xFF9CC5A1).copy(alpha = 0.8f) // Green tint for fox
-        Theme.ELEPHANT -> Color(0xFFFFD369).copy(alpha = 0.8f) // Yellow tint for elephant
-        Theme.PELICAN -> Color(0xFF87CEEB).copy(alpha = 0.8f) // Sky blue for pelican
-    }
+    return BirthdayThemes.getTheme(theme).textColor
 }
 
 private fun getThemeCircleBorderColor(theme: Theme): Color {
@@ -294,14 +298,6 @@ private fun getThemeCircleBorderColor(theme: Theme): Color {
     }
 }
 
-private fun getStatusBarTitle(theme: Theme): String {
-
-    return when (theme) {
-        Theme.FOX -> "Membook - Anniversary - Fox"
-        Theme.ELEPHANT -> "Membook - Anniversary - Elephant"
-        Theme.PELICAN -> "Membook - Anniversary - Pelican"
-    }
-}
 
 private fun getThemeBackgroundColor(theme: Theme): Color {
     return BirthdayThemes.getTheme(theme).backgroundColor
@@ -312,27 +308,3 @@ private fun getThemeBackgroundColor(theme: Theme): Color {
 //    }
 }
 
-private fun getThemeFallbackBackground(theme: Theme): Brush {
-    return when (theme) {
-        Theme.FOX -> Brush.verticalGradient(
-            colors = listOf(
-                Color(0xFFA8E6CF), // Light green
-                Color(0xFF88D8A3)  // Medium green
-            )
-        )
-
-        Theme.ELEPHANT -> Brush.verticalGradient(
-            colors = listOf(
-                Color(0xFFFFF8DC), // Light cream
-                Color(0xFFFFE5B4)  // Light peach
-            )
-        )
-
-        Theme.PELICAN -> Brush.verticalGradient(
-            colors = listOf(
-                Color(0xFFE3F2FD), // Light blue
-                Color(0xFFBBDEFB)  // Medium blue
-            )
-        )
-    }
-}

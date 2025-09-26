@@ -3,4 +3,8 @@
     <string name="pelican">pelican</string>
     <string name="fox">fox</string>
     <string name="elephant">elephant</string>
+    <string name="connect">Connect</string>
+    <string name="connecting">Connecting…</string>
+    <string name="connection_failed">Connection failed. Please check the server URL and try again.</string>
+    <string name="disconnected">Disconnected from server.</string>
 </resources>
