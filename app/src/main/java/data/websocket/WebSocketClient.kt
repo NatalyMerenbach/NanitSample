@@ -13,6 +13,8 @@ import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import java.util.concurrent.TimeUnit
 
+private const val HAPPY_BIRTHDAY = "HappyBirthday"
+
 class WebSocketClient {
     private val client = OkHttpClient.Builder()
         .readTimeout(3, TimeUnit.SECONDS)
@@ -38,7 +40,7 @@ class WebSocketClient {
                 Log.d("WebSocket", "Connection opened")
                 _connectionStatusChannel.trySend(ConnectionStatus.CONNECTED)
 
-                webSocket.send("HappyBirthday")
+                webSocket.send(HAPPY_BIRTHDAY)
                 Log.d("WebSocket", "Sent: HappyBirthday")
             }
 
