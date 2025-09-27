@@ -298,7 +298,7 @@ private fun DecorForCiphers(age: Int) {
         Image(
             painter = painterResource(R.drawable.ic_left),
             contentDescription = null,
-            modifier = Modifier.size(40.dp)
+            modifier = Modifier.size(45.dp)
         )
 
         Spacer(Modifier.width(ageSizes.decoGap))
@@ -322,7 +322,7 @@ private fun DecorForCiphers(age: Int) {
         Image(
             painter = painterResource(R.drawable.ic_right),
             contentDescription = null,
-            modifier = Modifier.size(40.dp)
+            modifier = Modifier.size(45.dp)
         )
     }
 }
