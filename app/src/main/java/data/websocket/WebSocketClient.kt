@@ -6,6 +6,7 @@ import data.models.BirthdayData
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.time.delay
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response

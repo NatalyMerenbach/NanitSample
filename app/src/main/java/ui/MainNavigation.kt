@@ -12,6 +12,7 @@ fun MainNavigation() {
     val birthdayData by viewModel.birthdayData.collectAsState()
     val connectionStatus by viewModel.connectionStatus.collectAsState()
 
+
     MainScreen(
         birthdayData = birthdayData,
         connectionStatus = connectionStatus,

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import data.models.BirthdayData
 import data.websocket.ConnectionStatus
 import data.websocket.WebSocketClient
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,9 +35,15 @@ class BabyBirthdayViewModel : ViewModel() {
     }
 
     fun connectToServer(serverUrl: String) {
-        _connectionStatus.value = ConnectionStatus.CONNECTING
-        _birthdayData.value = null
-        webSocketClient.connect(serverUrl)
+        viewModelScope.launch {
+            _connectionStatus.value = ConnectionStatus.CONNECTING
+            _birthdayData.value = null
+
+            // Add minimum delay to show connecting state
+            delay(1000) // delay to show "Connecting..."
+
+            webSocketClient.connect(serverUrl)
+        }
     }
 
     fun disconnect() {

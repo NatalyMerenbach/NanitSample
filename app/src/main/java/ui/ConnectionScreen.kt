@@ -34,6 +34,7 @@ fun ConnectionScreen(
     onConnect: () -> Unit
 ) {
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
     var isScanning by remember { mutableStateOf(false) }
     var ipSuggestions by remember { mutableStateOf<List<String>>(emptyList()) }
 
@@ -90,6 +91,7 @@ fun ConnectionScreen(
 
                 )
 
+
                 if (ipSuggestions.isNotEmpty()) {
                     Column {
                         Text(
@@ -119,23 +121,35 @@ fun ConnectionScreen(
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFF2196F3)
                     ),
-                    enabled = connectionStatus != ConnectionStatus.CONNECTING
+                    enabled = connectionStatus != ConnectionStatus.CONNECTING && connectionStatus != ConnectionStatus.CONNECTED
                 ) {
-                    if (connectionStatus == ConnectionStatus.CONNECTING) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(20.dp),
-                            color = Color.White,
-                            strokeWidth = 2.dp
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(text = stringResource(R.string.connecting))
-                    } else {
-                        Icon(
-                            imageVector = Icons.Default.Refresh,
-                            contentDescription = null
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(text = stringResource(R.string.connect))
+                    when (connectionStatus) {
+                        ConnectionStatus.CONNECTING -> {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(20.dp),
+                                color = Color.White,
+                                strokeWidth = 2.dp
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(text = stringResource(R.string.connecting))
+                        }
+                        ConnectionStatus.CONNECTED -> {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(20.dp),
+                                color = Color.White,
+                                strokeWidth = 2.dp
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(text = stringResource(R.string.connected))
+                        }
+                        else -> {
+                            Icon(
+                                imageVector = Icons.Default.Refresh,
+                                contentDescription = null
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(text = stringResource(R.string.connect))
+                        }
                     }
                 }
 
