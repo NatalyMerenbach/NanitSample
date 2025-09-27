@@ -9,8 +9,8 @@ import viewmodel.BabyBirthdayViewModel
 @Composable
 fun MainNavigation() {
     val viewModel: BabyBirthdayViewModel = viewModel()
-    val birthdayData by viewModel.state.collectAsState()
-    val connectionStatus by viewModel.connectionState.collectAsState()
+    val birthdayData by viewModel.birthdayData.collectAsState()
+    val connectionStatus by viewModel.connectionStatus.collectAsState()
 
     MainScreen(
         birthdayData = birthdayData,

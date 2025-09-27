@@ -23,7 +23,6 @@ class WebSocketClient {
 
     private val gson = Gson()
     private var webSocket: WebSocket? = null
-
     private val _birthdayDataChannel = Channel<BirthdayData?>()
     val birthdayDataFlow: Flow<BirthdayData?> = _birthdayDataChannel.receiveAsFlow()
 

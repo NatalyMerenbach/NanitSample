@@ -297,11 +297,6 @@ private fun getThemeCircleBorderColor(theme: Theme): Color {
 
 private fun getThemeBackgroundColor(theme: Theme): Color {
     return BirthdayThemes.getTheme(theme).backgroundColor
-//    return when (theme) {
-//        Theme.FOX -> BirthdayThemes.getTheme(Theme.FOX).backgroundColor // Light green to fill transparent areas
-//        Theme.ELEPHANT -> Color(0xFFFFF8DC) // Light cream to fill transparent areas
-//        Theme.PELICAN -> Color(0xFFE3F2FD) // Light blue to fill transparent areas
-//    }
 }
 
 private fun getThemeFallbackBackground(theme: Theme): Brush {
