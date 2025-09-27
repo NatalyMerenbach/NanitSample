@@ -1,15 +1,21 @@
 package ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -17,6 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import data.websocket.ConnectionStatus
 import com.example.nanitsample.R
+import kotlinx.coroutines.launch
+import utils.IpDiscovery
 
 @Composable
 fun ConnectionScreen(
@@ -25,6 +33,14 @@ fun ConnectionScreen(
     connectionStatus: ConnectionStatus,
     onConnect: () -> Unit
 ) {
+    val context = LocalContext.current
+    var isScanning by remember { mutableStateOf(false) }
+    var ipSuggestions by remember { mutableStateOf<List<String>>(emptyList()) }
+
+    LaunchedEffect(Unit) {
+        // Load common IP suggestions on first load
+        ipSuggestions = IpDiscovery.getCommonIpSuggestions(context)
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -70,8 +86,30 @@ fun ConnectionScreen(
                     label = { Text(stringResource(R.string.server_url)) },
                     placeholder = { Text("10.0.0.6:8080") },
                     modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
+                    singleLine = true,
+
                 )
+
+                if (ipSuggestions.isNotEmpty()) {
+                    Column {
+                        Text(
+                            text = "IP Suggestions (tap to use):",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = Color.Gray
+                        )
+                        LazyRow(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            items(ipSuggestions.take(12)) { suggestion ->
+                                AssistChip(
+                                    onClick = { onServerUrlChange(suggestion) },
+                                    label = { Text(suggestion, fontSize = 10.sp) }
+                                )
+                            }
+                        }
+                    }
+                }
 
                 Button(
                     onClick = onConnect,
