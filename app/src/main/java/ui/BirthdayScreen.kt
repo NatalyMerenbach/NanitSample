@@ -5,22 +5,26 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
@@ -29,6 +33,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -50,6 +55,7 @@ fun BirthdayScreen(
 ) {
     val theme = Theme.fromString(birthdayData.theme)
     val ageResult = AgeCalculator.calculateAge(birthdayData.dob)
+    val cipherWidth = 140
 
     Box(
         modifier = Modifier
@@ -79,11 +85,11 @@ fun BirthdayScreen(
             ) {
                 Text(
                     text = "TODAY ${birthdayData.name.uppercase()}",
-                    fontSize = 18.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = getThemeTextColor(theme),
                     textAlign = TextAlign.Center,
-                    maxLines = 1,
+                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
@@ -95,40 +101,9 @@ fun BirthdayScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(15.dp))
-
-            // Age number with decorative flourishes
-            Box(
-                contentAlignment = Alignment.Center
-            ) {
-                // Left decorative element
-                Image(
-                    painter = painterResource(id = R.drawable.ic_left),
-                    contentDescription = "Left decoration",
-                    modifier = Modifier
-                        .offset(x = (-80).dp)
-                        .size(40.dp)
-                )
-
-                // Stylized number based on theme and age
-                Image(
-                    painter = painterResource(id = getAgeDrawableId(ageResult.value)),
-                    contentDescription = "Age ${ageResult.value}",
-                    modifier = Modifier
-                        .size(120.dp, 180.dp),
-//                    colorFilter = ColorFilter.tint(getThemeAccentColor(theme))
-                )
-
-                // Right decorative element
-                Image(
-                    painter = painterResource(id = R.drawable.ic_right),
-                    contentDescription = "Right decoration",
-                    modifier = Modifier
-                        .offset(x = 80.dp)
-                        .size(40.dp)
-                )
-            }
-            Spacer(modifier = Modifier.height(13.dp))
+            Spacer(Modifier.height(15.dp))
+            DecorForCiphers(ageResult.value)
+            Spacer(Modifier.height(13.dp))
 
             // "MONTH OLD!" or "YEAR OLD!" text
             Text(
@@ -247,6 +222,7 @@ private fun getAgeDrawableId(age: Int): Int {
     }
 }
 
+
 private fun getThemeCameraIcon(theme: Theme): Int {
     return when (theme) {
         Theme.FOX -> R.drawable.ic_fox_cam
@@ -309,27 +285,68 @@ private fun getThemeBackgroundColor(theme: Theme): Color {
     return BirthdayThemes.getTheme(theme).backgroundColor
 }
 
-private fun getThemeFallbackBackground(theme: Theme): Brush {
-    return when (theme) {
-        Theme.FOX -> Brush.verticalGradient(
-            colors = listOf(
-                Color(0xFFA8E6CF), // Light green
-                Color(0xFF88D8A3)  // Medium green
-            )
+@Composable
+private fun DecorForCiphers(age: Int) {
+    val ageSizes = remember(age) { ageLayoutSizes(age) }
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        // left flourish
+        Image(
+            painter = painterResource(R.drawable.ic_left),
+            contentDescription = null,
+            modifier = Modifier.size(40.dp)
         )
 
-        Theme.ELEPHANT -> Brush.verticalGradient(
-            colors = listOf(
-                Color(0xFFFFF8DC), // Light cream
-                Color(0xFFFFE5B4)  // Light peach
-            )
-        )
+        Spacer(Modifier.width(ageSizes.decoGap))
 
-        Theme.PELICAN -> Brush.verticalGradient(
-            colors = listOf(
-                Color(0xFFE3F2FD), // Light blue
-                Color(0xFFBBDEFB)  // Medium blue
+        // number (kept same visual HEIGHT for all ages)
+        Box(
+            modifier = Modifier.size(width = ageSizes.width, height = ageSizes.height),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painterResource(id = getAgeDrawableId(age)),
+                contentDescription = "Age $age",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Fit
             )
+        }
+
+        Spacer(Modifier.width(ageSizes.decoGap))
+
+        // right flourish
+        Image(
+            painter = painterResource(R.drawable.ic_right),
+            contentDescription = null,
+            modifier = Modifier.size(40.dp)
         )
+    }
+}
+
+private data class AgeSizes(
+    val width: Dp,
+    val height: Dp = 140.dp, // constant height → “same size” across 2, 8, 10, 12, etc.
+    val decoGap: Dp
+)
+
+private fun ageLayoutSizes(age: Int): AgeSizes {
+    return when (age) {
+        // single-digit (2..9) – same look
+        in 2..9 -> AgeSizes(width = 90.dp, decoGap = 22.dp)
+
+        // “1” is skinny → a touch more outer gap looks nicer
+        1 -> AgeSizes(width = 80.dp, decoGap = 22.dp)
+
+        // double-digit normal (10, 12) – wider box but same height
+        10, 12 -> AgeSizes(width = 160.dp, decoGap = 22.dp)
+
+        // “11” is extra narrow → increase flourish gap so it doesn’t look cramped
+        11 -> AgeSizes(width = 150.dp, decoGap = 22.dp)
+
+        else -> AgeSizes(width = 140.dp, decoGap = 22.dp)
     }
 }
