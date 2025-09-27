@@ -12,13 +12,13 @@ data class BirthdayData(
     val theme: String
 )
 
-enum class Theme(val value: Int) {
-    PELICAN(R.string.pelican),
-    FOX(R.string.fox),
-    ELEPHANT(R.string.elephant);
+enum class Theme(val value: String) {
+    PELICAN("pelican"),
+    FOX("fox"),
+    ELEPHANT("elephant");
 
     companion object {
-        fun fromString(value: Int): Theme {
+        fun fromString(value: String): Theme {
             return Theme.entries.find { it.value == value } ?: PELICAN
         }
     }

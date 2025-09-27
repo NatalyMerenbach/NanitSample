@@ -14,10 +14,10 @@ class BabyBirthdayViewModel : ViewModel() {
     private val webSocketClient = WebSocketClient()
 
     private val _birthdayData = MutableStateFlow<BirthdayData?>(null)
-    val state: StateFlow<BirthdayData?> = _birthdayData.asStateFlow()
+    val birthdayData: StateFlow<BirthdayData?> = _birthdayData.asStateFlow()
 
     private val _connectionStatus = MutableStateFlow(ConnectionStatus.DISCONNECTED)
-    val connectionState: StateFlow<ConnectionStatus> = _connectionStatus.asStateFlow()
+    val connectionStatus: StateFlow<ConnectionStatus> = _connectionStatus.asStateFlow()
 
     init {
         viewModelScope.launch {
