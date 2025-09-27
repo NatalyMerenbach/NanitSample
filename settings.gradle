@@ -18,5 +18,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "nanitsample"
+rootProject.name = "NanitSample"
 include(":app")

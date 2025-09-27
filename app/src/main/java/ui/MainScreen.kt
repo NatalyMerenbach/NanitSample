@@ -12,8 +12,7 @@ import data.websocket.ConnectionStatus
 fun MainScreen(
     birthdayData: BirthdayData?,
     connectionStatus: ConnectionStatus,
-    onConnect: (String) -> Unit,
-    modifier: Modifier = Modifier
+    onConnect: (String) -> Unit
 ) {
     var serverUrl by remember { mutableStateOf("10.0.0.6:8080") }
     var selectedPhotoUri by remember { mutableStateOf<Uri?>(null) }
