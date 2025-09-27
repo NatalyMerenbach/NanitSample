@@ -84,7 +84,7 @@ fun BirthdayScreen(
                 maxLines = 2
             )
 
-            Spacer(modifier = Modifier.height(15.dp))
+            Spacer(modifier = Modifier.height(13.dp))
 
             // Age number with decorative flourishes
             Box(
@@ -95,7 +95,7 @@ fun BirthdayScreen(
                     painter = painterResource(id = R.drawable.ic_left),
                     contentDescription = "Left decoration",
                     modifier = Modifier
-                        .offset(x = (-80).dp)
+                        .offset(x = (-50).dp)
                         .size(40.dp)
                 )
 
@@ -104,8 +104,7 @@ fun BirthdayScreen(
                     painter = painterResource(id = getAgeDrawableId(ageResult.value)),
                     contentDescription = "Age ${ageResult.value}",
                     modifier = Modifier
-                        .size(120.dp, 180.dp),
-//                    colorFilter = ColorFilter.tint(getThemeAccentColor(theme))
+                        .size(80.dp, 180.dp),
                 )
 
                 // Right decorative element
@@ -113,7 +112,7 @@ fun BirthdayScreen(
                     painter = painterResource(id = R.drawable.ic_right),
                     contentDescription = "Right decoration",
                     modifier = Modifier
-                        .offset(x = 80.dp)
+                        .offset(x = 50.dp)
                         .size(40.dp)
                 )
             }

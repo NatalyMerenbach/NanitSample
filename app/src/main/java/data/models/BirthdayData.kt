@@ -1,6 +1,5 @@
 package data.models
 
-import com.example.nanitsample.R
 import com.google.gson.annotations.SerializedName
 
 data class BirthdayData(
@@ -12,10 +11,14 @@ data class BirthdayData(
     val theme: String
 )
 
+const val PELICAN_STR = "pelican"
+const val FOX_STR = "fox"
+const val ELEPHANT_STR = "elephant"
+
 enum class Theme(val value: String) {
-    PELICAN("pelican"),
-    FOX("fox"),
-    ELEPHANT("elephant");
+    PELICAN(PELICAN_STR),
+    FOX(FOX_STR),
+    ELEPHANT(ELEPHANT_STR);
 
     companion object {
         fun fromString(value: String): Theme {

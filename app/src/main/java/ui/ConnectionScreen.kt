@@ -2,12 +2,6 @@ package ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
@@ -21,8 +15,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.nanitsample.R
 import data.websocket.ConnectionStatus
+import com.example.nanitsample.R
 
 @Composable
 fun ConnectionScreen(
@@ -41,7 +35,7 @@ fun ConnectionScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(32.dp),
-            shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+            shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(
                 containerColor = Color.White
             ),
@@ -55,7 +49,7 @@ fun ConnectionScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
-                    text = "🎂 Nanit Birthday App",
+                    text = stringResource(R.string.nanit_birthday_app),
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF2196F3),
@@ -63,7 +57,7 @@ fun ConnectionScreen(
                 )
 
                 Text(
-                    text = "Connect to Birthday Server",
+                    text = stringResource(R.string.connect_to_nanit_server),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium,
                     color = Color.Black,
@@ -73,7 +67,7 @@ fun ConnectionScreen(
                 OutlinedTextField(
                     value = serverUrl,
                     onValueChange = onServerUrlChange,
-                    label = { Text("Server URL (IP:Port)") },
+                    label = { Text(stringResource(R.string.server_url)) },
                     placeholder = { Text("10.0.0.6:8080") },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
@@ -96,14 +90,14 @@ fun ConnectionScreen(
                             strokeWidth = 2.dp
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(stringResource(R.string.connecting))
+                        Text(text = stringResource(R.string.connecting))
                     } else {
                         Icon(
                             imageVector = Icons.Default.Refresh,
                             contentDescription = null
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(stringResource(R.string.connect))
+                        Text(text = stringResource(R.string.connect))
                     }
                 }
 
