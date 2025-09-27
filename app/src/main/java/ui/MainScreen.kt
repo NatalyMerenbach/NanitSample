@@ -12,7 +12,8 @@ import data.websocket.ConnectionStatus
 fun MainScreen(
     birthdayData: BirthdayData?,
     connectionStatus: ConnectionStatus,
-    onConnect: (String) -> Unit
+    onConnect: (String) -> Unit,
+    onDisconnect: () -> Unit,
 ) {
     var serverUrl by remember { mutableStateOf("10.0.0.6:8080") }
     var selectedPhotoUri by remember { mutableStateOf<Uri?>(null) }
@@ -27,7 +28,8 @@ fun MainScreen(
         BirthdayScreen(
             birthdayData = birthdayData,
             selectedPhotoUri = selectedPhotoUri,
-            onPhotoClick = { photoPickerLauncher.launch("image/*") }
+            onPhotoClick = { photoPickerLauncher.launch("image/*") },
+            onBackPress = { onDisconnect() }
         )
     } else {
         ConnectionScreen(

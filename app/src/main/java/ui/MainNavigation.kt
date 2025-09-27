@@ -17,6 +17,9 @@ fun MainNavigation() {
         connectionStatus = connectionStatus,
         onConnect = { serverUrl ->
             viewModel.connectToServer(serverUrl)
+        },
+        onDisconnect = {
+            viewModel.disconnect()
         }
     )
 }

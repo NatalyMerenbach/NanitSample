@@ -1,6 +1,7 @@
 package ui
 
 import android.net.Uri
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -57,8 +58,12 @@ import kotlin.math.sin
 fun BirthdayScreen(
     birthdayData: BirthdayData,
     selectedPhotoUri: Uri?,
-    onPhotoClick: () -> Unit
+    onPhotoClick: () -> Unit,
+    onBackPress: () -> Unit = {}
 ) {
+    BackHandler {
+        onBackPress()
+    }
     val theme = Theme.fromString(birthdayData.theme)
     val ageResult = AgeCalculator.calculateAge(birthdayData.dob)
 
@@ -303,14 +308,21 @@ private fun DecorForCiphers(age: Int,
                             onWidthMeasured: (Dp) -> Unit = {})  {
     val numberSizes = remember(age) { ageLayoutSizes(age) }
     val density = LocalDensity.current
+    //Total width = 2 decors + 2 gaps + cipher width
+
+    val totalWidth = 45.dp + numberSizes.decoGap +
+            numberSizes.width +
+            numberSizes.decoGap + 45.dp
+    onWidthMeasured(totalWidth)
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .onGloballyPositioned { coordinates ->
+            /*.onGloballyPositioned { coordinates ->
                 val width = with(density) { coordinates.size.width.toDp() }
 
                 onWidthMeasured(width)
-            },
+            }*/,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     )  {
