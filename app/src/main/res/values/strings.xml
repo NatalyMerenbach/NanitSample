@@ -5,7 +5,7 @@
     <string name="elephant">elephant</string>
     <string name="connect">Connect</string>
     <string name="connecting">Connecting…</string>
-    <string name="connection_failed">Connection failed. Please check the server URL and try again.</string>
+    <string name="connection_failed">Disconnected</string>
     <string name="disconnected">Disconnected from server.</string>
     <string name="server_url">Server URL (IP:Port)</string>
     <string name="connect_to_nanit_server">Connect to Nanit Server</string>
