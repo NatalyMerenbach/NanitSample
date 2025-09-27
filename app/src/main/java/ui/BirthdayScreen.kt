@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.nanithappybirthday.R
+import com.example.nanitsample.R
 import data.models.BirthdayData
 import data.models.Theme
 import ui.theme.BirthdayThemes
@@ -287,15 +287,11 @@ private fun getThemeAccentColor(theme: Theme): Color {
 }
 
 private fun getThemeCircleColor(theme: Theme): Color {
-    return BirthdayThemes.getTheme(theme).textColor
+    return BirthdayThemes.getTheme(theme).circleColor.copy(alpha = 0.8f)
 }
 
 private fun getThemeCircleBorderColor(theme: Theme): Color {
-    return when (theme) {
-        Theme.FOX -> Color(0xFF6B9B7C) // Darker green border
-        Theme.ELEPHANT -> Color(0xFFE6B342) // Darker yellow border
-        Theme.PELICAN -> Color(0xFF5DADE2) // Darker blue border
-    }
+    return BirthdayThemes.getTheme(theme).circleBorderColor
 }
 
 
@@ -308,3 +304,27 @@ private fun getThemeBackgroundColor(theme: Theme): Color {
 //    }
 }
 
+private fun getThemeFallbackBackground(theme: Theme): Brush {
+    return when (theme) {
+        Theme.FOX -> Brush.verticalGradient(
+            colors = listOf(
+                Color(0xFFA8E6CF), // Light green
+                Color(0xFF88D8A3)  // Medium green
+            )
+        )
+
+        Theme.ELEPHANT -> Brush.verticalGradient(
+            colors = listOf(
+                Color(0xFFFFF8DC), // Light cream
+                Color(0xFFFFE5B4)  // Light peach
+            )
+        )
+
+        Theme.PELICAN -> Brush.verticalGradient(
+            colors = listOf(
+                Color(0xFFE3F2FD), // Light blue
+                Color(0xFFBBDEFB)  // Medium blue
+            )
+        )
+    }
+}
