@@ -21,18 +21,24 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -55,7 +61,9 @@ fun BirthdayScreen(
 ) {
     val theme = Theme.fromString(birthdayData.theme)
     val ageResult = AgeCalculator.calculateAge(birthdayData.dob)
-    val cipherWidth = 140
+
+    // State to hold the measured width of the cipher row
+    var cipherRowWidth by remember { mutableStateOf(0.dp) }
 
     Box(
         modifier = Modifier
@@ -102,7 +110,10 @@ fun BirthdayScreen(
             }
 
             Spacer(Modifier.height(15.dp))
-            DecorForCiphers(ageResult.value)
+            DecorForCiphers(ageResult.value,
+                onWidthMeasured = { width ->
+                    cipherRowWidth = width
+                })
             Spacer(Modifier.height(13.dp))
 
             // "MONTH OLD!" or "YEAR OLD!" text
@@ -120,7 +131,8 @@ fun BirthdayScreen(
             PhotoCircleWithCamera(
                 selectedPhotoUri = selectedPhotoUri,
                 onPhotoClick = onPhotoClick,
-                theme = theme
+                theme = theme,
+                cipherRowWidth
             )
 
             Spacer(modifier = Modifier.height(15.dp))
@@ -144,7 +156,8 @@ fun BirthdayScreen(
 private fun PhotoCircleWithCamera(
     selectedPhotoUri: Uri?,
     onPhotoClick: () -> Unit,
-    theme: Theme
+    theme: Theme,
+    circleSize : Dp
 ) {
     Box(
         modifier = Modifier.size(200.dp),
@@ -153,7 +166,7 @@ private fun PhotoCircleWithCamera(
         // Main photo circle - larger
         Box(
             modifier = Modifier
-                .size(180.dp)
+                .size(circleSize)
                 .clip(CircleShape)
                 .background(getThemeCircleColor(theme))
                 .border(4.dp, getThemeCircleBorderColor(theme), CircleShape)
@@ -178,7 +191,7 @@ private fun PhotoCircleWithCamera(
                     painter = painterResource(id = getThemeBabyFace(theme)),
                     contentDescription = "Baby face",
 
-                    modifier = Modifier.size(215.dp)
+                    modifier = Modifier.size(circleSize)
                 )
             }
         }
@@ -286,14 +299,22 @@ private fun getThemeBackgroundColor(theme: Theme): Color {
 }
 
 @Composable
-private fun DecorForCiphers(age: Int) {
-    val ageSizes = remember(age) { ageLayoutSizes(age) }
+private fun DecorForCiphers(age: Int,
+                            onWidthMeasured: (Dp) -> Unit = {})  {
+    val numberSizes = remember(age) { ageLayoutSizes(age) }
+    val density = LocalDensity.current
 
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .onGloballyPositioned { coordinates ->
+                val width = with(density) { coordinates.size.width.toDp() }
+
+                onWidthMeasured(width)
+            },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
-    ) {
+    )  {
         // left flourish
         Image(
             painter = painterResource(R.drawable.ic_left),
@@ -301,11 +322,11 @@ private fun DecorForCiphers(age: Int) {
             modifier = Modifier.size(45.dp)
         )
 
-        Spacer(Modifier.width(ageSizes.decoGap))
+        Spacer(Modifier.width(numberSizes.decoGap))
 
         // number (kept same visual HEIGHT for all ages)
         Box(
-            modifier = Modifier.size(width = ageSizes.width, height = ageSizes.height),
+            modifier = Modifier.size(width = numberSizes.width, height = numberSizes.height),
             contentAlignment = Alignment.Center
         ) {
             Image(
@@ -316,7 +337,7 @@ private fun DecorForCiphers(age: Int) {
             )
         }
 
-        Spacer(Modifier.width(ageSizes.decoGap))
+        Spacer(Modifier.width(numberSizes.decoGap))
 
         // right flourish
         Image(
@@ -325,7 +346,11 @@ private fun DecorForCiphers(age: Int) {
             modifier = Modifier.size(45.dp)
         )
     }
+
 }
+
+fun Int.toDp(density: Density): Dp = with(density) { this@toDp.toDp() }
+
 
 private data class AgeSizes(
     val width: Dp,
