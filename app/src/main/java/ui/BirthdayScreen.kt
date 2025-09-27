@@ -303,7 +303,6 @@ private fun DecorForCiphers(age: Int,
                             onWidthMeasured: (Dp) -> Unit = {})  {
     val numberSizes = remember(age) { ageLayoutSizes(age) }
     val density = LocalDensity.current
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
