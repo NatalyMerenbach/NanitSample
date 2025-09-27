@@ -41,6 +41,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -164,8 +165,11 @@ private fun PhotoCircleWithCamera(
     theme: Theme,
     circleSize : Dp
 ) {
+    val density = LocalDensity.current
+    val cameraSize = 36.dp
+
     Box(
-        modifier = Modifier.size(200.dp),
+        modifier = Modifier.size(circleSize),
         contentAlignment = Alignment.Center
     ) {
         // Main photo circle - larger
@@ -204,10 +208,19 @@ private fun PhotoCircleWithCamera(
         // Themed camera icon positioned at 45°
         Box(
             modifier = Modifier
-                .offset(
-                    x = (90 * cos(PI / 4)).dp,
-                    y = (-90 * sin(PI / 4)).dp
-                )
+                .size(cameraSize)
+                .align(Alignment.Center)
+                .offset{
+                    // convert dp → px
+                    val radiusPx = with(density) { circleSize.toPx() } / 2
+                    val camSizePx = with(density) { cameraSize.toPx() } / 2
+
+                    val angle = PI / 4 // 45°
+                    val dx = (radiusPx * cos(angle) - camSizePx).toInt()
+                    val dy = (-(radiusPx * sin(angle)) - camSizePx).toInt()
+
+                    IntOffset(dx, dy)
+                }
                 .size(36.dp)
                 .clickable { onPhotoClick() }
         ) {
@@ -257,13 +270,6 @@ private fun getThemeBabyFace(theme: Theme): Int {
     }
 }
 
-private fun getThemeBabyFaceSmall(theme: Theme): Int {
-    return when (theme) {
-        Theme.FOX -> R.drawable.ic_fox_baby_3
-        Theme.ELEPHANT -> R.drawable.ic_elephant_baby_3
-        Theme.PELICAN -> R.drawable.ic_pelikan_baby_3
-    }
-}
 
 private fun getThemeBackgroundDrawable(theme: Theme): Int {
     return when (theme) {
@@ -280,14 +286,6 @@ private fun getThemeTextColor(theme: Theme): Color {
         Theme.FOX -> Color(0xFF2D2D2D) // Dark gray for better contrast
         Theme.ELEPHANT -> Color(0xFF2D2D2D)
         Theme.PELICAN -> Color(0xFF2D2D2D)
-    }
-}
-
-private fun getThemeAccentColor(theme: Theme): Color {
-    return when (theme) {
-        Theme.FOX -> Color(0xFFE85A4F) // Coral red as shown in Figma
-        Theme.ELEPHANT -> Color(0xFFE85A4F)
-        Theme.PELICAN -> Color(0xFFE85A4F)
     }
 }
 
@@ -317,12 +315,7 @@ private fun DecorForCiphers(age: Int,
 
     Row(
         modifier = Modifier
-            .fillMaxWidth()
-            /*.onGloballyPositioned { coordinates ->
-                val width = with(density) { coordinates.size.width.toDp() }
-
-                onWidthMeasured(width)
-            }*/,
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     )  {
@@ -357,10 +350,7 @@ private fun DecorForCiphers(age: Int,
             modifier = Modifier.size(45.dp)
         )
     }
-
 }
-
-fun Int.toDp(density: Density): Dp = with(density) { this@toDp.toDp() }
 
 
 private data class AgeSizes(
@@ -368,6 +358,8 @@ private data class AgeSizes(
     val height: Dp = 140.dp, // constant height → “same size” across 2, 8, 10, 12, etc.
     val decoGap: Dp
 )
+
+//Depends of number the icon size has different size, so we have to update decors places regarding these values
 
 private fun ageLayoutSizes(age: Int): AgeSizes {
     return when (age) {
