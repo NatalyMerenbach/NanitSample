@@ -10,4 +10,5 @@
     <string name="server_url">Server URL (IP:Port)</string>
     <string name="connect_to_nanit_server">Connect to Nanit Server</string>
     <string name="nanit_birthday_app">Nanit Birthday</string>
+    <string name="connected">Connected</string>
 </resources>
