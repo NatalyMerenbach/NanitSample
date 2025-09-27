@@ -28,6 +28,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -63,7 +64,6 @@ fun BirthdayScreen(
             contentScale = ContentScale.Crop
         )
 
-
         // Main content overlay
         Column(
             modifier = Modifier
@@ -73,18 +73,29 @@ fun BirthdayScreen(
         ) {
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Header text: "TODAY [NAME] IS" with automatic line wrapping
-            Text(
-                text = "TODAY ${birthdayData.name.uppercase()} IS",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = getThemeTextColor(theme),
-                textAlign = TextAlign.Center,
-                lineHeight = 20.sp,
-                maxLines = 2
-            )
+            // Header text: "TODAY [NAME] IS" - fixed formatting
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "TODAY ${birthdayData.name.uppercase()}",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = getThemeTextColor(theme),
+                    textAlign = TextAlign.Center,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    text = "IS",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = getThemeTextColor(theme),
+                    textAlign = TextAlign.Center
+                )
+            }
 
-            Spacer(modifier = Modifier.height(13.dp))
+            Spacer(modifier = Modifier.height(15.dp))
 
             // Age number with decorative flourishes
             Box(
@@ -95,7 +106,7 @@ fun BirthdayScreen(
                     painter = painterResource(id = R.drawable.ic_left),
                     contentDescription = "Left decoration",
                     modifier = Modifier
-                        .offset(x = (-50).dp)
+                        .offset(x = (-80).dp)
                         .size(40.dp)
                 )
 
@@ -104,7 +115,8 @@ fun BirthdayScreen(
                     painter = painterResource(id = getAgeDrawableId(ageResult.value)),
                     contentDescription = "Age ${ageResult.value}",
                     modifier = Modifier
-                        .size(80.dp, 180.dp),
+                        .size(120.dp, 180.dp),
+//                    colorFilter = ColorFilter.tint(getThemeAccentColor(theme))
                 )
 
                 // Right decorative element
@@ -112,11 +124,10 @@ fun BirthdayScreen(
                     painter = painterResource(id = R.drawable.ic_right),
                     contentDescription = "Right decoration",
                     modifier = Modifier
-                        .offset(x = 50.dp)
+                        .offset(x = 80.dp)
                         .size(40.dp)
                 )
             }
-
             Spacer(modifier = Modifier.height(13.dp))
 
             // "MONTH OLD!" or "YEAR OLD!" text
@@ -161,13 +172,13 @@ private fun PhotoCircleWithCamera(
     theme: Theme
 ) {
     Box(
-        modifier = Modifier.size(180.dp),
+        modifier = Modifier.size(200.dp),
         contentAlignment = Alignment.Center
     ) {
-        // Main photo circle
+        // Main photo circle - larger
         Box(
             modifier = Modifier
-                .size(160.dp)
+                .size(180.dp)
                 .clip(CircleShape)
                 .background(getThemeCircleColor(theme))
                 .border(4.dp, getThemeCircleBorderColor(theme), CircleShape)
@@ -187,11 +198,12 @@ private fun PhotoCircleWithCamera(
                     contentScale = ContentScale.Crop
                 )
             } else {
-                // Theme-specific baby face from XML drawable
+                // Theme-specific baby face from XML drawable - same size as inner circle
                 Image(
                     painter = painterResource(id = getThemeBabyFace(theme)),
                     contentDescription = "Baby face",
-                    modifier = Modifier.size(80.dp)
+
+                    modifier = Modifier.size(215.dp)
                 )
             }
         }
@@ -200,8 +212,8 @@ private fun PhotoCircleWithCamera(
         Box(
             modifier = Modifier
                 .offset(
-                    x = (80 * cos(PI / 4)).dp,
-                    y = (-80 * sin(PI / 4)).dp
+                    x = (90 * cos(PI / 4)).dp,
+                    y = (-90 * sin(PI / 4)).dp
                 )
                 .size(36.dp)
                 .clickable { onPhotoClick() }
@@ -292,7 +304,6 @@ private fun getThemeCircleColor(theme: Theme): Color {
 private fun getThemeCircleBorderColor(theme: Theme): Color {
     return BirthdayThemes.getTheme(theme).circleBorderColor
 }
-
 
 private fun getThemeBackgroundColor(theme: Theme): Color {
     return BirthdayThemes.getTheme(theme).backgroundColor
