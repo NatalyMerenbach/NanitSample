@@ -91,6 +91,7 @@ object IpDiscovery {
                 "$subnet.6:8080",
                 "$subnet.100:8080",
                 "$subnet.101:8080",
+                "$subnet.190:8080",
                 "$subnet.254:8080"
             ))
         }

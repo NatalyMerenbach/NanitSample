@@ -32,14 +32,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -48,8 +47,8 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.nanitsample.R
 import data.models.BirthdayData
-import data.models.Theme
-import ui.theme.BirthdayThemes
+import data.models.NanitThemes
+import ui.theme.BirthdayThemeColors
 import utils.AgeCalculator
 import kotlin.math.PI
 import kotlin.math.cos
@@ -62,29 +61,32 @@ fun BirthdayScreen(
     onPhotoClick: () -> Unit,
     onBackPress: () -> Unit = {}
 ) {
+    //back press callback, for next interaction with server
     BackHandler {
         onBackPress()
     }
-    val theme = Theme.fromString(birthdayData.theme)
+    val theme = NanitThemes.fromString(birthdayData.theme)
+    //result of birthday calculation
     val ageResult = AgeCalculator.calculateAge(birthdayData.dob)
 
-    // State to hold the measured width of the cipher row
+    // State to hold the measured width of the cipher row -
+    // we have to calculate width of cipher and decoration set of icons, because
+    //baby face circle depends on this width
     var cipherRowWidth by remember { mutableStateOf(0.dp) }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(getThemeBackgroundColor(theme))
+            .background(getBackgroundColor(theme))
     ) {
         // Full-screen background illustration
         Image(
-            painter = painterResource(id = getThemeBackgroundDrawable(theme)),
+            painter = painterResource(id = getBackgroundDrawable(theme)),
             contentDescription = "Background illustration",
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
 
-        // Main content overlay
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -93,29 +95,31 @@ fun BirthdayScreen(
         ) {
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Header text: "TODAY [NAME] IS" - fixed formatting
+            // Header text: "TODAY [NAME] IS"
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "TODAY ${birthdayData.name.uppercase()}",
+                    text = stringResource(R.string.today, birthdayData.name.uppercase()),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = getThemeTextColor(theme),
+                    color = getTextColor(theme),
                     textAlign = TextAlign.Center,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    text = "IS",
+                    text = stringResource(R.string.is_),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = getThemeTextColor(theme),
+                    color = getTextColor(theme),
                     textAlign = TextAlign.Center
                 )
             }
 
             Spacer(Modifier.height(15.dp))
+            // decor cipher (birthday number) with left/right
+            //icons and calculate width of them for circle
             DecorForCiphers(ageResult.value,
                 onWidthMeasured = { width ->
                     cipherRowWidth = width
@@ -127,7 +131,7 @@ fun BirthdayScreen(
                 text = "${ageResult.unit.uppercase()}!",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = getThemeTextColor(theme),
+                color = getTextColor(theme),
                 textAlign = TextAlign.Center
             )
 
@@ -150,7 +154,7 @@ fun BirthdayScreen(
                 modifier = Modifier
                     .height(32.dp)
                     .wrapContentWidth(),
-                colorFilter = ColorFilter.tint(getThemeTextColor(theme))
+                colorFilter = ColorFilter.tint(getTextColor(theme))
             )
 
             Spacer(modifier = Modifier.weight(1f))
@@ -162,12 +166,15 @@ fun BirthdayScreen(
 private fun PhotoCircleWithCamera(
     selectedPhotoUri: Uri?,
     onPhotoClick: () -> Unit,
-    theme: Theme,
+    theme: NanitThemes,
     circleSize : Dp
 ) {
     val density = LocalDensity.current
     val cameraSize = 36.dp
 
+    //circleSize - dynamic value, we calculate when
+    //recognize sizes of number and decors
+    //and circle diameter depends on the size
     Box(
         modifier = Modifier.size(circleSize),
         contentAlignment = Alignment.Center
@@ -177,12 +184,13 @@ private fun PhotoCircleWithCamera(
             modifier = Modifier
                 .size(circleSize)
                 .clip(CircleShape)
-                .background(getThemeCircleColor(theme))
-                .border(4.dp, getThemeCircleBorderColor(theme), CircleShape)
+                .background(getCircleColor(theme))
+                .border(4.dp, getCircleBorderColor(theme), CircleShape)
                 .clickable { onPhotoClick() },
             contentAlignment = Alignment.Center
         ) {
             if (selectedPhotoUri != null) {
+                //AsyncImage composable that executes an ImageRequest asynchronously and renders the result.
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(selectedPhotoUri)
@@ -197,7 +205,7 @@ private fun PhotoCircleWithCamera(
             } else {
                 // Theme-specific baby face from XML drawable - same size as inner circle
                 Image(
-                    painter = painterResource(id = getThemeBabyFace(theme)),
+                    painter = painterResource(id = getBabyFace(theme)),
                     contentDescription = "Baby face",
 
                     modifier = Modifier.size(circleSize)
@@ -210,7 +218,7 @@ private fun PhotoCircleWithCamera(
             modifier = Modifier
                 .size(cameraSize)
                 .align(Alignment.Center)
-                .offset{
+                .offset {
                     // convert dp → px
                     val radiusPx = with(density) { circleSize.toPx() } / 2
                     val camSizePx = with(density) { cameraSize.toPx() } / 2
@@ -225,7 +233,7 @@ private fun PhotoCircleWithCamera(
                 .clickable { onPhotoClick() }
         ) {
             Image(
-                painter = painterResource(id = getThemeCameraIcon(theme)),
+                painter = painterResource(id = getCameraIcon(theme)),
                 contentDescription = "Camera",
                 modifier = Modifier.fillMaxSize()
             )
@@ -235,6 +243,7 @@ private fun PhotoCircleWithCamera(
 
 // Theme-based drawable selection functions
 private fun getAgeDrawableId(age: Int): Int {
+    //digits icons
     return when (age) {
         0 -> R.drawable.ic_0
         1 -> R.drawable.ic_1
@@ -254,63 +263,68 @@ private fun getAgeDrawableId(age: Int): Int {
 }
 
 
-private fun getThemeCameraIcon(theme: Theme): Int {
+private fun getCameraIcon(theme: NanitThemes): Int {
+    //cam icons depends on NanitTheme
     return when (theme) {
-        Theme.FOX -> R.drawable.ic_fox_cam
-        Theme.ELEPHANT -> R.drawable.ic_elephant_cam
-        Theme.PELICAN -> R.drawable.ic_pelican_cam
+        NanitThemes.FOX -> R.drawable.ic_fox_cam
+        NanitThemes.ELEPHANT -> R.drawable.ic_elephant_cam
+        NanitThemes.PELICAN -> R.drawable.ic_pelican_cam
     }
 }
 
-private fun getThemeBabyFace(theme: Theme): Int {
+private fun getBabyFace(theme: NanitThemes): Int {
+    //baby face icons depends on NanitTheme
     return when (theme) {
-        Theme.FOX -> R.drawable.ic_fox_baby_2
-        Theme.ELEPHANT -> R.drawable.ic_elephant_baby_2
-        Theme.PELICAN -> R.drawable.ic_pelikan_baby_2
+        NanitThemes.FOX -> R.drawable.ic_fox_baby_2
+        NanitThemes.ELEPHANT -> R.drawable.ic_elephant_baby_2
+        NanitThemes.PELICAN -> R.drawable.ic_pelikan_baby_2
     }
 }
 
 
-private fun getThemeBackgroundDrawable(theme: Theme): Int {
+private fun getBackgroundDrawable(theme: NanitThemes): Int {
+    //background drawble depends on NanitTheme
     return when (theme) {
-        Theme.FOX -> R.drawable.bg_fox
-        Theme.ELEPHANT -> R.drawable.bg_elephant
-        Theme.PELICAN -> R.drawable.bg_pelican
+        NanitThemes.FOX -> R.drawable.bg_fox
+        NanitThemes.ELEPHANT -> R.drawable.bg_elephant
+        NanitThemes.PELICAN -> R.drawable.bg_pelican
     }
 }
 
 // Theme color functions for UI elements
 
-private fun getThemeTextColor(theme: Theme): Color {
-    return when (theme) {
-        Theme.FOX -> Color(0xFF2D2D2D) // Dark gray for better contrast
-        Theme.ELEPHANT -> Color(0xFF2D2D2D)
-        Theme.PELICAN -> Color(0xFF2D2D2D)
-    }
+private fun getTextColor(theme: NanitThemes): Color {
+    //text color depends on NanitTheme
+    return BirthdayThemeColors.getBirthdayColors(theme).textColor
 }
 
-private fun getThemeCircleColor(theme: Theme): Color {
-    return BirthdayThemes.getTheme(theme).circleColor.copy(alpha = 0.8f)
+private fun getCircleColor(theme: NanitThemes): Color {
+    //circle color depends on NanitTheme
+    return BirthdayThemeColors.getBirthdayColors(theme).circleColor.copy(alpha = 0.8f)
 }
 
-private fun getThemeCircleBorderColor(theme: Theme): Color {
-    return BirthdayThemes.getTheme(theme).circleBorderColor
+private fun getCircleBorderColor(theme: NanitThemes): Color {
+    //circle border color depends on NanitTheme
+    return BirthdayThemeColors.getBirthdayColors(theme).circleBorderColor
 }
 
-private fun getThemeBackgroundColor(theme: Theme): Color {
-    return BirthdayThemes.getTheme(theme).backgroundColor
+private fun getBackgroundColor(theme: NanitThemes): Color {
+    //background depends on NanitTheme
+    return BirthdayThemeColors.getBirthdayColors(theme).backgroundColor
 }
 
 @Composable
 private fun DecorForCiphers(age: Int,
                             onWidthMeasured: (Dp) -> Unit = {})  {
-    val numberSizes = remember(age) { ageLayoutSizes(age) }
-    val density = LocalDensity.current
+    //dynamically state for width calculation
+    val ageSizes = remember(age) { ageLayoutSizes(age) }
+
     //Total width = 2 decors + 2 gaps + cipher width
 
-    val totalWidth = 45.dp + numberSizes.decoGap +
-            numberSizes.width +
-            numberSizes.decoGap + 45.dp
+    val totalWidth = 45.dp + ageSizes.decoGap +
+            ageSizes.width +
+            ageSizes.decoGap + 45.dp
+    //remember static state into compose
     onWidthMeasured(totalWidth)
 
     Row(
@@ -326,22 +340,22 @@ private fun DecorForCiphers(age: Int,
             modifier = Modifier.size(45.dp)
         )
 
-        Spacer(Modifier.width(numberSizes.decoGap))
+        Spacer(Modifier.width(ageSizes.decoGap))
 
         // number (kept same visual HEIGHT for all ages)
         Box(
-            modifier = Modifier.size(width = numberSizes.width, height = numberSizes.height),
+            modifier = Modifier.size(width = ageSizes.width, height = ageSizes.height),
             contentAlignment = Alignment.Center
         ) {
             Image(
                 painter = painterResource(id = getAgeDrawableId(age)),
-                contentDescription = "Age $age",
+                contentDescription = stringResource(R.string.age, age),
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Fit
             )
         }
 
-        Spacer(Modifier.width(numberSizes.decoGap))
+        Spacer(Modifier.width(ageSizes.decoGap))
 
         // right flourish
         Image(
@@ -362,6 +376,10 @@ private data class AgeSizes(
 //Depends of number the icon size has different size, so we have to update decors places regarding these values
 
 private fun ageLayoutSizes(age: Int): AgeSizes {
+    //It depends on number - two ot one cipher, we have to calculate
+    //width of whole number and to know position of left and right decors
+    //because them must be on the same distance from the number
+    //and we calculate it dynamically
     return when (age) {
         // single-digit (2..9) – same look
         in 2..9 -> AgeSizes(width = 90.dp, decoGap = 22.dp)

@@ -6,7 +6,6 @@ import data.models.BirthdayData
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.time.delay
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -37,7 +36,9 @@ class WebSocketClient {
 
         webSocket = client.newWebSocket(request, object : WebSocketListener() {
             override fun onOpen(webSocket: WebSocket, response: Response) {
+
                 Log.d("WebSocket", "Connection opened")
+                //update view model connection state to CONNECTED
                 _connectionStatusChannel.trySend(ConnectionStatus.CONNECTED)
 
                 webSocket.send(HAPPY_BIRTHDAY)
@@ -48,6 +49,7 @@ class WebSocketClient {
                 Log.d("WebSocket", "Received: $text")
                 try {
                     val birthdayData = gson.fromJson(text, BirthdayData::class.java)
+                    //update view model birthday state
                     _birthdayDataChannel.trySend(birthdayData)
                 } catch (e: Exception) {
                     Log.e("WebSocket", "Error parsing birthday data: ${e.message}")
@@ -62,11 +64,13 @@ class WebSocketClient {
 
             override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
                 Log.d("WebSocket", "Connection closing: $reason")
+                //update view model connection state to DISCONNECTED
                 _connectionStatusChannel.trySend(ConnectionStatus.DISCONNECTED)
             }
 
             override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
                 Log.d("WebSocket", "Connection closed: $reason")
+                //update view model connection state to DISCONNECTED
                 _connectionStatusChannel.trySend(ConnectionStatus.DISCONNECTED)
             }
         })

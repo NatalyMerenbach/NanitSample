@@ -102,7 +102,7 @@ fun ConnectionScreen(
                     value = serverUrl,
                     onValueChange = onServerUrlChange,
                     label = { Text(stringResource(R.string.server_url)) },
-                    placeholder = { Text("10.0.0.6:8080") },
+                    placeholder = { Text("10.25.50.190:8080") },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
 

@@ -27,10 +27,10 @@ class BirthdayDataTest {
         val themeString = "pelican"
 
         // When
-        val theme = Theme.fromString(themeString)
+        val theme = NanitThemes.fromString(themeString)
 
         // Then
-        assertEquals(Theme.PELICAN, theme)
+        assertEquals(NanitThemes.PELICAN, theme)
         assertEquals(PELICAN_STR, theme.value)
     }
 
@@ -41,10 +41,10 @@ class BirthdayDataTest {
         val invalidTheme = "invalid_theme"
 
         // When
-        val theme = Theme.fromString(invalidTheme)
+        val theme = NanitThemes.fromString(invalidTheme)
 
         // Then
-        assertEquals(Theme.PELICAN, theme)
+        assertEquals(NanitThemes.PELICAN, theme)
     }
 
     @Test
@@ -53,10 +53,10 @@ class BirthdayDataTest {
         val emptyTheme = ""
 
         // When
-        val theme = Theme.fromString(emptyTheme)
+        val theme = NanitThemes.fromString(emptyTheme)
 
         // Then
-        assertEquals(Theme.PELICAN, theme)
+        assertEquals(NanitThemes.PELICAN, theme)
     }
 
     @Test
@@ -66,12 +66,12 @@ class BirthdayDataTest {
         val mixedCaseTheme = "Fox"
 
         // When
-        val upperResult = Theme.fromString(uppercaseTheme)
-        val mixedResult = Theme.fromString(mixedCaseTheme)
+        val upperResult = NanitThemes.fromString(uppercaseTheme)
+        val mixedResult = NanitThemes.fromString(mixedCaseTheme)
 
         // Then
-        assertEquals("Uppercase should default to PELICAN", Theme.PELICAN, upperResult)
-        assertEquals("Mixed case should default to PELICAN", Theme.PELICAN, mixedResult)
+        assertEquals("Uppercase should default to PELICAN", NanitThemes.PELICAN, upperResult)
+        assertEquals("Mixed case should default to PELICAN", NanitThemes.PELICAN, mixedResult)
     }
 
     @Test
@@ -81,21 +81,21 @@ class BirthdayDataTest {
         assertEquals("fox", FOX_STR)
         assertEquals("elephant", ELEPHANT_STR)
 
-        assertEquals(PELICAN_STR, Theme.PELICAN.value)
-        assertEquals(FOX_STR, Theme.FOX.value)
-        assertEquals(ELEPHANT_STR, Theme.ELEPHANT.value)
+        assertEquals(PELICAN_STR, NanitThemes.PELICAN.value)
+        assertEquals(FOX_STR, NanitThemes.FOX.value)
+        assertEquals(ELEPHANT_STR, NanitThemes.ELEPHANT.value)
     }
 
     @Test
     fun `Theme enum has exactly three values`() {
         // Given
-        val themes = Theme.values()
+        val themes = NanitThemes.values()
 
         // Then
         assertEquals("Should have exactly 3 themes", 3, themes.size)
-        assertTrue("Should contain PELICAN", themes.contains(Theme.PELICAN))
-        assertTrue("Should contain FOX", themes.contains(Theme.FOX))
-        assertTrue("Should contain ELEPHANT", themes.contains(Theme.ELEPHANT))
+        assertTrue("Should contain PELICAN", themes.contains(NanitThemes.PELICAN))
+        assertTrue("Should contain FOX", themes.contains(NanitThemes.FOX))
+        assertTrue("Should contain ELEPHANT", themes.contains(NanitThemes.ELEPHANT))
     }
 
     @Test
@@ -112,7 +112,7 @@ class BirthdayDataTest {
                 dob = testDob,
                 theme = themeString
             )
-            val theme = Theme.fromString(themeString)
+            val theme = NanitThemes.fromString(themeString)
 
             // Then
             assertEquals("Name should match", testName, birthdayData.name)
@@ -156,8 +156,8 @@ class BirthdayDataTest {
         assertEquals(futureTimestamp, futureData.dob)
 
         // All should have valid theme enums
-        assertNotNull(Theme.fromString(oldData.theme))
-        assertNotNull(Theme.fromString(recentData.theme))
-        assertNotNull(Theme.fromString(futureData.theme))
+        assertNotNull(NanitThemes.fromString(oldData.theme))
+        assertNotNull(NanitThemes.fromString(recentData.theme))
+        assertNotNull(NanitThemes.fromString(futureData.theme))
     }
 }

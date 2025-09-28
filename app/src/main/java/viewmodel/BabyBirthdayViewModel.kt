@@ -20,6 +20,8 @@ class BabyBirthdayViewModel : ViewModel() {
     private val _connectionStatus = MutableStateFlow(ConnectionStatus.DISCONNECTED)
     val connectionStatus: StateFlow<ConnectionStatus> = _connectionStatus.asStateFlow()
 
+    //init view model for using as flow states for ui updates
+    //connection and birthday states changes we are listening in case
     init {
         viewModelScope.launch {
             webSocketClient.birthdayDataFlow.collect { data ->

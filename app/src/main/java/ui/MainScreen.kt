@@ -15,7 +15,10 @@ fun MainScreen(
     onConnect: (String) -> Unit,
     onDisconnect: () -> Unit,
 ) {
-    var serverUrl by remember { mutableStateOf("10.0.0.6:8080") }
+    //server uri state flow string for connect to websocket
+    var serverUrl by remember { mutableStateOf("10.25.50.190:8080") }
+
+    //selected photo uri state flow
     var selectedPhotoUri by remember { mutableStateOf<Uri?>(null) }
 
     val photoPickerLauncher = rememberLauncherForActivityResult(
@@ -25,6 +28,7 @@ fun MainScreen(
     }
 
     if (birthdayData != null) {
+        //show BirthdayScreen
         BirthdayScreen(
             birthdayData = birthdayData,
             selectedPhotoUri = selectedPhotoUri,
@@ -32,6 +36,7 @@ fun MainScreen(
             onBackPress = { onDisconnect() }
         )
     } else {
+        //show ConnectionScreen
         ConnectionScreen(
             serverUrl = serverUrl,
             onServerUrlChange = { serverUrl = it },

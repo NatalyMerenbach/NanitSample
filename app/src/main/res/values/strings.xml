@@ -12,4 +12,7 @@
     <string name="nanit_birthday_app">Nanit Birthday</string>
     <string name="connected">Connected</string>
     <string name="ip_suggestions_tap_to_use">IP Suggestions (tap to use):</string>
+    <string name="today">TODAY %1$s</string>
+    <string name="is_">IS</string>
+    <string name="age">Age %1$d</string>
 </resources>

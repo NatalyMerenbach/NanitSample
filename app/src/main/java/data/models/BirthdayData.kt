@@ -15,14 +15,14 @@ const val PELICAN_STR = "pelican"
 const val FOX_STR = "fox"
 const val ELEPHANT_STR = "elephant"
 
-enum class Theme(val value: String) {
+enum class NanitThemes(val value: String) {
     PELICAN(PELICAN_STR),
     FOX(FOX_STR),
     ELEPHANT(ELEPHANT_STR);
 
     companion object {
-        fun fromString(value: String): Theme {
-            return Theme.entries.find { it.value == value } ?: PELICAN
+        fun fromString(value: String): NanitThemes {
+            return NanitThemes.entries.find { it.value == value } ?: PELICAN
         }
     }
 }
