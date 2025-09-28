@@ -1,4 +1,4 @@
-# 🎂 Nanit Happy Birthday App
+# Nanit Happy Birthday App
 
 ## Overview
 
